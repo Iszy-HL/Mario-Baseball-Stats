@@ -180,7 +180,8 @@ leaguewide_data <- mario_data %>%
     cum_hits = cumsum(total_hits),
     running_avg = cum_hits / cum_at_bats
   )
-  
+
+
 #Leaguewide Average Plot
 ggplot() +
   geom_line(leaguewide_data, mapping = aes(x=gameday, y=running_avg))
@@ -293,5 +294,7 @@ ggplot() +
   )
 
 write.csv(mario_data,'Mario_Baseball_Data_update.csv')
+write.csv(leaguewide_data,'leaguewide_data.csv')
+
 ```
 
