@@ -292,6 +292,6 @@ ggplot() +
     sec.axis = sec_axis(~ . * 1, name = "running_so_9")
   )
 
-
+write.csv(mario_data,'Mario_Baseball_Data_update.csv')
 ```
 
