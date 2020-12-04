@@ -46,11 +46,11 @@ mario_data <- mario_data %>%
     big_plays = Big.Plays,
     special_pitching = Special.1,
     player_type = Player.Type,
-    captain = Capitan
-    ) %>%
-  mutate(date = as.Date(date,"%m.%d.%y")) %>%
-  mutate(played_game = as.factor(played_game)) %>%
-  mutate(captain = as.factor(captain))
+    captain = Capitan) %>%
+  mutate(date = as.Date(date,"%m.%d.%y"),
+         played_game = as.factor(played_game),
+         captain = as.factor(captain))
+
   
 ```
 
@@ -71,33 +71,32 @@ mario_data <- mario_data %>%
 #By Player Hitting
 player_hitting <- mario_data %>%
   group_by(player_name) %>%
-  summarise(
-    batting_average = sum(hits)/sum(at_bats),
-    special_use_rate = sum(special_hitting)/sum(at_bats)
-  )
+  summarise(batting_average = sum(hits)/sum(at_bats),
+            special_use_rate = sum(special_hitting)/sum(at_bats))
+
 kable(player_hitting, digits = 3)
 
 
 #By Player Type Hitting
 player_type_hitting <- mario_data %>%
   group_by(player_type) %>%
-  summarise(
-    total_ab = sum(at_bats),
-    total_hits = sum(hits),
-    total_runs_batted_in = sum(runs_batted_in),
-    total_hits = sum(hits),
-    total_homeruns = sum(homeruns),
-    total_sb = sum(stolen_bases),
-    batting_average = sum(hits)/sum(at_bats),
-    special_use_rate = sum(special_hitting)/sum(at_bats),
-    sb_hits = total_sb/total_hits
-    )
+  summarise(total_ab = sum(at_bats),
+            total_hits = sum(hits),
+            total_runs_batted_in = sum(runs_batted_in),
+            total_hits = sum(hits),
+            total_homeruns = sum(homeruns),
+            total_sb = sum(stolen_bases),
+            batting_average = sum(hits)/sum(at_bats),
+            special_use_rate = sum(special_hitting)/sum(at_bats),
+            sb_hits = total_sb/total_hits)
+
 kable(player_type_hitting, digits = 3)
 
 #By Y/N Captain Hitting
 captain_stats <- mario_data %>%
   group_by(captain) %>%
   summarise(batting_average = sum(hits)/sum(at_bats))
+
 kable(captain_stats, digits = 3)
 
 ```
@@ -133,16 +132,30 @@ mario <-  mario_data %>%
 
 #Plot of 6 Players
 ggplot() +
-  geom_line(king_toad, mapping = aes(x = cum_at_bats, y = running_avg, color = "King Toad")) +
-  geom_line(waluigi, mapping = aes(x = cum_at_bats, y = running_avg, color = "Waluigi")) +
-  geom_line(peach, mapping = aes(x = cum_at_bats, y = running_avg, color = "Peach")) +
-  geom_line(toad, mapping = aes(x = cum_at_bats, y = running_avg, color = "Toad")) +
-  geom_line(petey, mapping = aes(x = cum_at_bats, y = running_avg, color = "Petey")) +
-  geom_line(mario, mapping = aes(x = cum_at_bats, y = running_avg, color = "Mario")) +
-  scale_x_continuous(breaks = scales::pretty_breaks(n = 20)) +
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  geom_line(king_toad, mapping = aes(x = cum_at_bats, 
+                                     y = running_avg, 
+                                     color = "King Toad")) +
+  geom_line(waluigi, mapping = aes(x = cum_at_bats, 
+                                   y = running_avg, 
+                                   color = "Waluigi")) +
+  geom_line(peach, mapping = aes(x = cum_at_bats, 
+                                 y = running_avg, 
+                                 color = "Peach")) +
+  geom_line(toad, mapping = aes(x = cum_at_bats, 
+                                y = running_avg, 
+                                color = "Toad")) +
+  geom_line(petey, mapping = aes(x = cum_at_bats, 
+                                 y = running_avg, 
+                                 color = "Petey")) +
+  geom_line(mario,mapping = aes(x = cum_at_bats, 
+                                y = running_avg, 
+                                color = "Mario")) +
+  scale_x_continuous(breaks = pretty_breaks(n = 20)) +
+  scale_y_continuous(breaks = pretty_breaks(n = 10)) +
   labs(title = "Running Batting Averages for Mario Baseball", 
-       subtitle = "Running Batting Average Across At Bats", x = "At Bats", y ="Batting Average") +
+       subtitle = "Running Batting Average Across At Bats", 
+       x = "At Bats", 
+       y ="Batting Average") +
   scale_colour_discrete("Players") +
   theme_fivethirtyeight()
 
@@ -153,14 +166,19 @@ ggplot() +
   geom_line(toad, mapping = aes(x = cum_at_bats, y = running_avg, color = "Toad")) +
   geom_line(petey, mapping = aes(x = cum_at_bats, y = running_avg, color = "Petey")) +
   geom_line(mario, mapping = aes(x = cum_at_bats, y = running_avg, color = "Mario")) +
-  scale_x_continuous(breaks = scales::pretty_breaks(n = 20)) +
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  scale_x_continuous(breaks = pretty_breaks(n = 20)) +
+  scale_y_continuous(breaks = pretty_breaks(n = 10)) +
   labs(title = "Running Batting Averages for Mario Baseball", 
-       subtitle = "Random Set of Player", x = "At Bats", y ="Batting Average") +
+       subtitle = "Random Set of Player", 
+       x = "At Bats", 
+       y ="Batting Average") +
   scale_color_discrete("Players")
   
 # Plot of all Players
-ggplot(mario_data, aes(x=cum_at_bats, y=running_avg, group=player_name, shape=player_name)) +
+ggplot(mario_data, aes(x=cum_at_bats, 
+                       y=running_avg, 
+                       group=player_name, 
+                       shape=player_name)) +
   geom_line() +
   facet_wrap(~ player_name)
 
@@ -172,14 +190,12 @@ leaguewide_data <- mario_data %>%
   summarise(
     total_hits = sum(hits),
     total_at_bats = sum(at_bats),
-    total_average = sum(total_hits)/sum(total_at_bats)
-    ) %>%
+    total_average = sum(total_hits)/sum(total_at_bats)) %>%
   mutate(
     gameday = row_number(),
     cum_at_bats = cumsum(total_at_bats),
     cum_hits = cumsum(total_hits),
-    running_avg = cum_hits / cum_at_bats
-  )
+    running_avg = cum_hits / cum_at_bats)
 
 
 #Leaguewide Average Plot
@@ -212,12 +228,14 @@ player_era_1 <- mario_data %>%
   filter(sum(innings_pitched) >= 40) %>%
   group_by(player_name) %>%
   summarise(era = (sum(runs_allowed)/sum(innings_pitched)*9))
+
 kable(player_era_1, digits = 3)
 
 player_era_2 <- mario_data %>%
   filter(sum(innings_pitched) >= 10 & sum(innings_pitched) < 40) %>%
   group_by(player_name) %>%
   summarise(era = (sum(runs_allowed)/sum(innings_pitched)*9))
+
 kable(player_era_2, digits = 3)
 
 #Player Type Pitching
@@ -227,8 +245,8 @@ player_type_pitching <- mario_data %>%
     total_innings = sum(innings_pitched),
     era = (sum(runs_allowed)/sum(innings_pitched)*9),
     total_strikeouts = sum(strikeouts),
-    total_big_plays = sum(big_plays),
-    )
+    total_big_plays = sum(big_plays))
+
 kable(player_type_pitching, digits = 3)
 
 #Running Pitching Stats
@@ -260,7 +278,9 @@ ggplot() +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 10)) +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
   labs(title = "Running ERA for Mario Baseball", 
-       subtitle = "Players with 40+ Innings Pitched", x = "Innings Pitched", y ="ERA") +
+       subtitle = "Players with 40+ Innings Pitched", 
+       x = "Innings Pitched", 
+       y ="ERA") +
   scale_colour_discrete("Players")
 
 
@@ -286,12 +306,13 @@ leaguewide_pitching <- mario_data %>%
 
 #Leaguewide ERA Plot
 ggplot() +
-  geom_line(leaguewide_pitching, mapping = aes(x=gameday, y=running_era, color = "Blue")) +
-  geom_line(leaguewide_pitching, mapping = aes(x=gameday, y=running_so_9, color = "Red"))+
-   scale_y_continuous(
-    "running_era", 
-    sec.axis = sec_axis(~ . * 1, name = "running_so_9")
-  )
+  geom_line(leaguewide_pitching, mapping = aes(x=gameday, 
+                                               y=running_era, 
+                                               color = "Blue")) +
+  geom_line(leaguewide_pitching, mapping = aes(x=gameday, 
+                                               y=running_so_9, 
+                                               color = "Red"))+
+   scale_y_continuous("running_era", sec.axis = sec_axis(~ . * 1, name = "running_so_9"))
 
 write.csv(mario_data,'Mario_Baseball_Data_update.csv')
 write.csv(leaguewide_data,'leaguewide_data.csv')
