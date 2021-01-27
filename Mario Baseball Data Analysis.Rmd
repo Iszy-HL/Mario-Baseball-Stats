@@ -151,7 +151,7 @@ ggplot() +
   geom_line(mario,mapping = aes(x = cum_at_bats, 
                                 y = running_avg, 
                                 color = "Mario")) +
-  scale_x_continuous(breaks = pretty_breaks(n = 20)) +
+  scale_x_continuous(breaks = pretty_breaks(n = 10)) +
   scale_y_continuous(breaks = pretty_breaks(n = 10)) +
   labs(title = "Running Batting Averages for Mario Baseball", 
        subtitle = "Running Batting Average Across At Bats", 
@@ -167,7 +167,7 @@ ggplot() +
   geom_line(toad, mapping = aes(x = cum_at_bats, y = running_avg, color = "Toad")) +
   geom_line(petey, mapping = aes(x = cum_at_bats, y = running_avg, color = "Petey")) +
   geom_line(mario, mapping = aes(x = cum_at_bats, y = running_avg, color = "Mario")) +
-  scale_x_continuous(breaks = pretty_breaks(n = 20)) +
+  scale_x_continuous(breaks = pretty_breaks(n = 10)) +
   scale_y_continuous(breaks = pretty_breaks(n = 10)) +
   labs(title = "Running Batting Averages for Mario Baseball", 
        subtitle = "Random Set of Player", 
@@ -210,8 +210,9 @@ leaguewide_data <- mario_data %>%
 ggplot() +
   geom_line(leaguewide_data, mapping = aes(x=gameday, y=running_avg)) +
   labs(title = "Running Leaguewide Batting Average for Mario Baseball", 
-       x = "At Bats", 
-       y ="Batting Average")
+       x = "Gamedays", 
+       y ="Batting Average") +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 10))
 
 ```
 
@@ -250,21 +251,21 @@ stargazer(batting_avg_captain,
 
 #Player Pitching
 player_era_1 <- mario_data %>%
-  filter(sum(innings_pitched) >= 40) %>%
+  filter(sum(innings_pitched) >= 100) %>%
   group_by(player_name) %>%
   summarise(era = (sum(runs_allowed)/sum(innings_pitched)*9))
 
 kable(player_era_1, align = "lc", col.names = c("Player", "ERA"),
-      caption = "ERA for pitchers with 40+ Innings Pitched",
+      caption = "ERA for pitchers with 100+ Innings Pitched",
       digits = 3)
 
 player_era_2 <- mario_data %>%
-  filter(sum(innings_pitched) >= 10 & sum(innings_pitched) < 40) %>%
+  filter(sum(innings_pitched) >= 25 & sum(innings_pitched) < 100) %>%
   group_by(player_name) %>%
   summarise(era = (sum(runs_allowed)/sum(innings_pitched)*9))
 
 kable(player_era_2, align = "lc", col.names = c("Player", "ERA"),
-      caption = "ERA for pitchers with 10-40 Innings Pitched",
+      caption = "ERA for pitchers with 25-100 Innings Pitched",
       digits = 3)
 
 ```
@@ -312,6 +313,7 @@ koopa <- mario_data %>%
 boo <- mario_data %>%
   filter(player_name == "Boo")
 
+
 #Plot Running Pitching
 ggplot() +
   geom_line(koopa, mapping = aes(x = cum_innings, y = running_era, color = "Koopa")) +
@@ -321,7 +323,7 @@ ggplot() +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 10)) +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
   labs(title = "Running ERA for Mario Baseball", 
-       subtitle = "Players with 40+ Innings Pitched", 
+       subtitle = "Players with 100+ Innings Pitched", 
        x = "Innings Pitched", 
        y ="ERA") +
   scale_colour_discrete("Players")
